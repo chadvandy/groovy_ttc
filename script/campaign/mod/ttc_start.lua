@@ -118,7 +118,8 @@ function ttc_mct_init()
     true)
 end
 
-
+--- NOTE: This is automatically called during FirstTickAfterWorldCreated
+--- TODO: Change that implicit assumption to an explicit assumption.
 function ttc_start()
   if mct then
     return

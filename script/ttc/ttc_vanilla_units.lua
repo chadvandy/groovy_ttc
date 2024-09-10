@@ -1434,8 +1434,6 @@ local units_with_special_rules = {
 }
 
 
-
-
 local ttc = core:get_static_object("tabletopcaps")
 ttc.add_setup_callback(function()
    ttc.add_unit_list(wh3_units, true)

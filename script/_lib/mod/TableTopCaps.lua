@@ -14,11 +14,18 @@ local ttc_error = function()
   script_error("DRUNKFLAMINGO TableTopCaps Error, see log")
 end
 
+--- There are localisation strings provided within TTC, such as "ttc_army_limited", that use
+--- fill-in lines. "This army may have up to 0000 1111 worth of 2222 units". This function
+--- replaces those sections of four-numbers in the order provided to this function, within 
+--- the vararg "..." parameter.
+  --- NOTE: This would be simpler using `%f` style format strings, which both establish the
+  --- expected type in the .loc file and preserve in-string formatting in other languages,
+  --- whereas the numbers may be confusing for translators and they may edit it unintentionally.
 ---fills the localisation with the provided strings
 ---@param loc string
 ---@param ... string
 ---@return string
-local  fill_loc = function(loc, ...)
+local fill_loc = function(loc, ...)
   local output = loc
   for i = 1, #arg do
       local f = i - 1
@@ -49,7 +56,8 @@ local function add_table_to_table(t, to_add, log_name)
   end
 end
 
-
+-- Shorthand to trigger a repeat callback that has a "timeout" parameter; ie., a good way
+-- to run a callback every 1s for 10s, and stop it after 10s.
 local function repeat_callback_with_timespan(callback, interval, timespan, name_for_removal)
   local name =  name_for_removal or ("ttc_temp_callback_"..core:get_unique_counter())
   cm:repeat_real_callback(callback, interval, name)
@@ -144,7 +152,9 @@ mod.selected_character = 0
 ---@alias unit_selection_entry {index: integer, context_id: string|integer, main_unit_key: string}
 mod.unit_selection = {} ---@type unit_selection_entry[]
 
----refresh the picture of which units we have selected.
+--- Find the relevant information for every unit card visible from the currently opened army's unit
+--- panel. Importantly, check each card for the unit context ID, the main unit key, and its position in
+--- the army itself.
 mod.update_unit_selection = function()
   mod.unit_selection = {}
   local armyList = find_uicomponent_from_table(core:get_ui_root(), {"units_panel", "main_units_panel", "units"})
@@ -183,8 +193,7 @@ mod.count_unit_in_selection = function(unit_key)
   return count
 end
 
---c_print(tostring(core:get_static_object("tabletopcaps").is_recruit_panel_open()))
----mercenary_display
+--- Test if the mercenary panel is currently visible at the time of this call.
 ---@return boolean
 mod.is_merc_panel_open = function()
   -- :root:units_panel:main_units_panel:recruitment_docker:recruitment_options:mercenary_display
@@ -193,7 +202,7 @@ mod.is_merc_panel_open = function()
   return is_uicomponent(merc_display) and merc_display:Visible(true)
 end
 
-
+--- Test if the recruitment panel is currently visible at the time of this call.
 ---@return boolean
 mod.is_recruit_panel_open = function()
   -- :root:units_panel:main_units_panel:recruitment_docker:recruitment_options:recruitment_listbox
@@ -202,9 +211,10 @@ mod.is_recruit_panel_open = function()
   return is_uicomponent(recruit_display) and recruit_display:Visible(true)
 end
 
----units_panel
+--- Test if the units panel is currently visible at the time of this call.
 ---@return boolean
 mod.is_units_panel_open = function()
+  --- TODO check for root, "units_panel"; not sure why it's done through CUIM, but it seems an extra step.
   return cm:get_campaign_ui_manager():is_panel_open("units_panel")
 end
 
@@ -239,6 +249,8 @@ mod.is_warband_upgrade_panel_open = function()
 end
 
 mod.last_panel_open = ""
+--- Resolve which "unit" panel is currently open, between units exchange, recruitment, mercenaries,
+--- etc., for their particular UI interactions.
 mod.get_current_panel = function ()
   if mod.is_exchange_panel_open() then
     return "unit_exchange"
@@ -255,6 +267,9 @@ mod.get_current_panel = function ()
   end
 end
 
+--- Listen for a particular list of panel[s] to open,
+--- and run the specified callback when the first one
+--- of those panels is opened.
 ---@param callback fun(context)
 ---@param ... string
 mod.panels_open_callback = function(callback, ...)
@@ -290,7 +305,8 @@ mod.force_has_caps = function(force)
   return false
 end
 
-
+--- Tracker and header info about a single unit that is understood by TTC. Particularly
+--- used for getting rule and weight information about this unit.
 ---@class ttc_unit
 local ttc_unit = {}
 mod.units = {} ---@type table<string, ttc_unit>
@@ -300,7 +316,7 @@ local ttc_character = {}
 mod.characters = {}---@type table<integer, ttc_character>
 
 
-
+--- Create a new TTC Unit object, to track the global details for this unit and its particular rules.
 ---@param unit_key string
 ---@param group_name string|nil
 ---@param unit_weight integer|nil
@@ -399,6 +415,8 @@ ttc_character.command_queue_index = function(self)
   return self.cqi
 end
 
+--- Inform the underlying systems about a new cost within a character's army, and track the
+--- spending in the army based on the new unit added.
 ---@param self ttc_character
 ---@param unit_record ttc_unit
 ---@param is_queued_exchange boolean|nil
@@ -486,6 +504,8 @@ ttc_character.refresh_special_rules = function(self)
   end
 end
 
+--- Confirm that we have the space in our budget to afford this unit within
+--- the specified caps "group".
 ---@param self ttc_character
 ---@param unit_record ttc_unit
 ---@return boolean
@@ -520,6 +540,8 @@ ttc_character.can_afford_swap = function (self, unit_record_to_remove, unit_reco
   return true
 end
 
+--- Test a character to see if a specified group is
+--- over the cap allowed for that group.
 ---@param self ttc_character
 ---@param group_key string
 ---@return boolean
@@ -670,10 +692,12 @@ end
 mod.add_listeners_to_army_unit_card = function(unitCard, character_record, unit_record)
   local cost_tooltip_loc
   local tt_restricted_loc
+  --- TODO if is_nil()
   if not character_record then
     out("Aborting add_listeners_to_army_unit_card; No character record for unit card")
     return 
   end
+  
   if unit_record.group == "core" then
     local desc_loc_to_fill = common.get_localised_string("ttc_unit_no_cost")
     local detail_loc_to_fill = common.get_localised_string("ttc_army_unlimited")
@@ -860,7 +884,7 @@ end
 
 
 ---@param character CHARACTER_SCRIPT_INTERFACE
----@param force boolean
+---@param force boolean?
 mod.select_character = function(character, force)
   if not mod.is_units_panel_open() then
     out("Select character was called for ["..tostring(character:command_queue_index()).."], but the units panel isn't open!")
@@ -2898,6 +2922,7 @@ end
 ---load all of the lua files from a specific folder
 --- ie. load_modules("script/my_folder/") to load everything in ?.pack/script/my_folder/
 --- code shamelessly stolen from Vandy <3
+--- <3 thanks DF
 ---@param path string
 local function load_modules(path)
 local search_override = "*.lua" -- search for all files that end in .lua within this path
@@ -3053,17 +3078,20 @@ mod.add_unit_list = function(unit_list, prioritized)
     if not entry then
       out("entry is nil! Something is weird in the calling file")
     else
-      local unit_key = entry[1] 
-      ---@cast unit_key string
-      if mod.setup.entries[unit_key] then
-        out("\tUnit Key: ["..unit_key.."] existing entry overwritten by prioritized list.")
-        if prioritized then
-          mod.setup.entries[unit_key] = entry
+      local unit_key = entry[1]
+
+      if is_string(unit_key) then
+        ---@cast unit_key string
+        if mod.setup.entries[unit_key] then
+          out("\tUnit Key: ["..unit_key.."] existing entry overwritten by prioritized list.")
+          if prioritized then
+            mod.setup.entries[unit_key] = entry
+          else
+            out("\tUnit Key: ["..unit_key.."] is being skipped because it already has an entry.")
+          end
         else
-          out("\tUnit Key: ["..unit_key.."] is being skipped because it already has an entry.")
+          mod.setup.entries[unit_key] = entry
         end
-      else
-        mod.setup.entries[unit_key] = entry
       end
     end
   end
@@ -3108,5 +3136,6 @@ end
 --------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------
 
+--- Save the internally created object to be accessible elsewhere through the Core static-object system.
+--- Done instead of using a global to preserve the global environment namespace and performance.
 core:add_static_object("tabletopcaps", mod)
-
