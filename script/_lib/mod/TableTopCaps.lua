@@ -1,7 +1,16 @@
+---[[
+--- Core behavior of the TTC mod. All functionality is
+--- within this singular file.
+---]]
+
+-- TODO split out individual classes to their own module files
+-- TODO Split off UI interactions?
+-- TODO Split off API for sure.
 
 ---@param t string|any
 local out = function(t)
-  ModLog("DRUNKFLAMINGO: "..tostring(t).." (tabletopcaps)")
+  ModLog(string.format("[%s]: %s", "TTC", tostring(t)))
+  -- ModLog("DRUNKFLAMINGO: "..tostring(t).." (tabletopcaps)")
 end
 
 local out_if = function(statement, message)
@@ -67,7 +76,17 @@ local function repeat_callback_with_timespan(callback, interval, timespan, name_
 end
 
 ---@class tabletopcaps
-local mod = {} 
+local mod = {
+  name = "TTC"
+} 
+
+--- Display output for this mod.
+---@param t string|any
+function mod.out(t)
+  ModLog(string.format("[%s]: %s", mod.name, tostring(t)))
+end
+
+-- TODO Build this all in a single call instead of reindexing `mod`?
 
 mod.ui_settings = {}
 --mod.version = 0 
@@ -87,7 +106,6 @@ mod.ui_settings.path_to_allied_unit_list = {
   {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "allied_recuitment_display", "recruitment_holder", "unit_list", 
   "listview", "list_clip", "allied_unit_list"}
 }
-
 
 mod.ui_settings.path_to_mercenary_cap = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display","frame", "mercenary_cap_holder", "tx_merc_count"}
 

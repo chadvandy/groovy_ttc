@@ -1,14 +1,19 @@
----@param t string
-local out = function(t)
-  ModLog("DRUNKFLAMINGO: "..tostring(t).." (ttc_start.lua)")
-end
+---[[
+--- Initialization for TTC during the campaign context. Handles
+--- MCT integration and various TTC initializations - listeners,
+--- the startup sequence, etc.
+--- the startup sequence, etc.
+---]]
 
+---@type tabletopcaps
 local mod = core:get_static_object("tabletopcaps")
+
+local out = mod.out
 
 local mct = core:get_static_object("mod_configuration_tool")
 
 function ttc_mct_init()
-  out("MCT Active: Preparing callbacks to launch with options")
+  out("MCT Active - Preparing callbacks to launch with options")
 
   --refresh the settings for point caps when they get changed.
   core:add_listener(
@@ -118,9 +123,8 @@ function ttc_mct_init()
     true)
 end
 
---- NOTE: This is automatically called during FirstTickAfterWorldCreated
---- TODO: Change that implicit assumption to an explicit assumption.
-function ttc_start()
+--- TTC startup, without MCT enabled. Starts listeners and internal tracking.
+local function ttc_start()
   if mct then
     return
   end
@@ -128,6 +132,7 @@ function ttc_start()
   core:trigger_event("ModScriptEventTabletopCapsSetup")
   mod.finish_setup()
 
+  -- TODO Reduce the number of individual listener calls here.
   mod.add_listeners()
   mod.add_ai_listeners()
   mod.add_ui_meter_listeners()
@@ -136,7 +141,18 @@ function ttc_start()
   return mod
 end
 
-if mct then
-  ttc_mct_init()
+--- Called early in campaign
+--- context if MCT is not enabled.
+local function ttc_init()
+  cm:add_first_tick_callback(ttc_start)
 end
 
+-- If MCT is active, run the MCT initialization sequence,
+-- to begin running listeners for MCT events. Elsewise,
+-- run the bog-standard TTC initializations on
+-- first tick.
+if mct then
+  ttc_mct_init()
+else
+  ttc_init()
+end

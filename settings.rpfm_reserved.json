@@ -1,7 +1,7 @@
 {
   "settings_text": {
     "diagnostics_files_to_ignore": "",
-    "import_files_to_ignore": "text\ndb\nsettings.rpfm_reserved"
+    "import_files_to_ignore": ".git/\n.vscode/\n.gitignore\ntext\ndb\nsettings.rpfm_reserved"
   },
   "settings_string": {},
   "settings_bool": {

@@ -1,3 +1,9 @@
+---[[
+--- MCT Settings handler. Enables the end user to tweak whether the mod
+--- is active, whether the AI uses or ignores the system, and tweaks
+--- to the various point limits.
+---]]
+
 
 local mct = get_mct()
 local loc_prefix = "mct_ttc_"

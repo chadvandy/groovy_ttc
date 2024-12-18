@@ -1,3 +1,18 @@
+--- [[
+--- Default rules for the units in vanilla, separated by DLC added for
+--- ease of creation. Various subtables have no practical impact, just
+--- easier to navigate and add new ones this way.
+--- Noteworthy "special" tables in this file are the `subculture_details` table,
+--- which provides the units that AI factions will replace non-allowed units with,
+--- and the `units_with_special_rules` table, which informs the central TTC controller
+--- what units to check for "special rules", ie. factions, lords, skills, etc., that
+--- change the behavior of the caps for that unit.
+--- ]]
+
+-- TODO Build in one table w/ subtables?
+-- TODO Move the other tables to their own files.
+
+
 local wh3_units = {
 
     ----Cathay
@@ -1421,6 +1436,98 @@ local dlc_25_units = {
     {"wh_main_dwf_veh_gyrocopter_1_malakai" , "special" , 2}
 }
 
+local dlc_26_units = {
+
+    ---------------------------------------------------------------
+    --GREENSKINS
+    ---------------------------------------------------------------
+    
+    -------NORMAL UNITS-------
+    --CORE
+    {"wh3_main_grn_inf_goblins_sword_shield", "core"},
+    {"wh3_main_grn_inf_orc_boyz_spear_shield", "core"},
+    
+    --SPECIAL
+    {"wh3_dlc26_grn_inf_black_orcs_shield", "special", 2},
+    {"wh3_dlc26_grn_art_bolt_throwa", "special", 2},
+
+    --RARE
+    {"wh3_dlc26_grn_mon_colossal_squig", "rare", 2},
+    {"wh3_dlc26_grn_mon_arachnarok_spider_flinger", "rare", 3},
+    
+    -------ROR-------
+    --SPECIAL
+    {"wh3_dlc26_grn_inf_rugluds_armoured_orcs", "special", 2},
+    --RARE
+    {"wh3_dlc26_grn_art_bolt_throwa_ror", "rare", 1},
+    {"wh3_dlc26_grn_mon_colossal_squig_ror", "rare", 2},
+
+    ---------------------------------------------------------------
+    --KHORNE
+    ---------------------------------------------------------------
+    
+    -------NORMAL UNITS-------
+    --SPECIAL
+    {"wh3_dlc26_kho_inf_khorngors", "special", 1},
+    {"wh3_dlc26_kho_inf_skullreapers", "special", 2},
+    {"wh3_dlc26_kho_mon_bloodbeast_of_khorne", "special", 3},
+
+    --RARE
+    {"wh3_dlc26_kho_inf_wrathmongers", "rare", 1},
+    {"wh3_dlc26_kho_mon_slaughterbrute", "rare", 3},
+    
+    -------ROR-------
+    --RARE
+    {"wh3_dlc26_kho_inf_wrathmongers_ror", "rare", 1},
+    {"wh3_dlc26_kho_veh_skullcannon_ror", "rare", 2},
+    
+    ---------------------------------------------------------------
+    --OGRES
+    ---------------------------------------------------------------
+    
+    -------NORMAL UNITS-------
+    --SPECIAL
+    {"wh3_dlc26_ogr_inf_golgfags_maneaters", "special", 2},
+    {"wh3_dlc26_ogr_inf_pigback_riders", "special", 1},
+    {"wh3_dlc26_ogr_mon_blood_vultures", "special", 1},
+    {"wh3_dlc26_ogr_mon_yhetees", "special", 2},
+
+    --RARE
+    {"wh3_dlc26_ogr_mon_thundertusk", "rare", 3},
+    
+    -------ROR-------
+    --SPECIAL
+    {"wh3_dlc26_ogr_inf_pigback_riders_ror", "special", 1},
+    {"wh3_dlc26_ogr_mon_yhetees_ror", "special", 2},
+
+    --RARE
+    {"wh3_dlc26_ogr_inf_eshin_maneater_ror", "rare", 1},
+
+    ---------------------------------------------------------------
+    --BEASTMEN
+    ---------------------------------------------------------------
+    
+    -------NORMAL UNITS-------
+    --SPECIAL
+    {"wh3_dlc26_bst_inf_khorngors", "special", 1},
+
+    ---------------------------------------------------------------
+    --WARRIORS OF CHAOS
+    ---------------------------------------------------------------
+    
+    -------ROR-------
+    --SPECIAL
+    {"wh3_dlc26_chs_inf_chosen_mkho_ror", "special", 2},
+    
+    ---------------------------------------------------------------
+    --VAMPIRE COUNTS
+    ---------------------------------------------------------------
+    
+    -------NORMAL UNITS-------
+    --SPECIAL
+    {"wh3_main_vmp_inf_grave_guard_2", "special", 1}
+}
+
 
 ---special rules are set up in the database using effects, however, flagging them here is necessary because it is too expensive for the script to check all 1600 possible units for a special rule.
 ---Valid flags are "subtype", "faction" and "subculture"
@@ -1433,19 +1540,21 @@ local units_with_special_rules = {
     {"wh3_dlc23_chd_inf_infernal_guard_great_weapons", {subtype = "wh3_dlc23_chd_drazhoath"}}
 }
 
-
+-- Add in these tables to the TTC controller.
 local ttc = core:get_static_object("tabletopcaps")
 ttc.add_setup_callback(function()
-   ttc.add_unit_list(wh3_units, true)
-   ttc.add_unit_list(wh3_ror, true)
-   ttc.add_unit_list(wh2_units, true)
-   ttc.add_unit_list(dlc20_units, true)
-   ttc.add_unit_list(chorfs_dlc_units, true)
+    ttc.add_unit_list(wh3_units, true)
+    ttc.add_unit_list(wh3_ror, true)
+    ttc.add_unit_list(wh2_units, true)
+    ttc.add_unit_list(dlc20_units, true)
+    ttc.add_unit_list(chorfs_dlc_units, true)
     ttc.add_unit_list(controversial_dlc_units, true)
     ttc.add_unit_list(reputation_salvaging_dlc_units, true)
     ttc.add_unit_list(dlc_25_units, true)
-   for subculture_key, unit_list in pairs(subculture_defaults) do
-    ttc.add_replacement_units_for_subculture(subculture_key, unit_list)
-   end
-   ttc.add_special_rule_list(units_with_special_rules)
+    ttc.add_unit_list(dlc_26_units, true)
+
+    for subculture_key, unit_list in pairs(subculture_defaults) do
+        ttc.add_replacement_units_for_subculture(subculture_key, unit_list)
+    end
+    ttc.add_special_rule_list(units_with_special_rules)
 end)
