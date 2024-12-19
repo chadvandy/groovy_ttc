@@ -20,7 +20,7 @@ local out_if = function(statement, message)
 end
 
 local ttc_error = function()
-  script_error("DRUNKFLAMINGO TableTopCaps Error, see log")
+  script_error("[TTC] TableTopCaps Error, see log!")
 end
 
 --- There are localisation strings provided within TTC, such as "ttc_army_limited", that use
@@ -416,16 +416,22 @@ ttc_character.clone_to_temp_record = function(self)
   end
   clone.factors = {}
   self.potential_special_rules = {}
-  clone.log = function(this, t)
-    ModLog("DRUNFLAMINGO: "..tostring(t).." (tabletopcaps:cloned_character"..tostring(self.cqi)..")")
-  end
+
+  
+  -- clone.log = function(this, t)
+  --   ModLog("DRUNFLAMINGO: "..tostring(t).." (tabletopcaps:cloned_character"..tostring(self.cqi)..")")
+  -- end
   
   return clone
 end
 
-ttc_character.log = function(self, t)
-  ModLog("DRUNFLAMINGO: "..tostring(t).." (tabletopcaps:character"..tostring(self.cqi)..")")
+function ttc_character:log(t) 
+  mod.out(string.format("%s (tabletopcaps:character%d)", t, self.cqi))
 end
+
+-- ttc_character.log = function(self, t)
+--   ModLog("DRUNFLAMINGO: "..tostring(t).." (tabletopcaps:character"..tostring(self.cqi)..")")
+-- end
 
 ---get the command queue index
 ---@return integer
