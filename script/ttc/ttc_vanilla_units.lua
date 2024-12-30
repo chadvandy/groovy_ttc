@@ -62,6 +62,9 @@ local wh3_units = {
     {"wh3_main_kho_veh_blood_shrine_0", "rare", 1},
     {"wh3_main_kho_veh_skullcannon_0", "rare", 2},
 
+    -- ghorgon ror (same as bst version)
+    {"wh2_dlc17_kho_mon_ghorgon_ror_0", "rare", 3},
+
     ----Kislev
     --Core
     {"wh3_main_ksl_cav_winged_lancers_0", "core"},
@@ -547,6 +550,7 @@ local wh2_units = {
     {"wh_main_grn_inf_savage_orc_big_uns", "core"},
     {"wh_main_grn_inf_savage_orcs", "core"},
     {"wh_dlc06_grn_inf_nasty_skulkers_0", "core"},
+    {"wh_dlc06_grn_mon_spider_hatchlings_0", "core"},
 
     --SPECIAL
     {"wh_main_grn_cav_goblin_wolf_chariot", "special", 1},
@@ -1454,6 +1458,7 @@ local dlc_26_units = {
     --RARE
     {"wh3_dlc26_grn_mon_colossal_squig", "rare", 2},
     {"wh3_dlc26_grn_mon_arachnarok_spider_flinger", "rare", 3},
+    {"wh3_dlc26_grn_cav_mangler_squig", "rare", 1},
     
     -------ROR-------
     --SPECIAL
@@ -1487,7 +1492,7 @@ local dlc_26_units = {
     
     -------NORMAL UNITS-------
     --SPECIAL
-    {"wh3_dlc26_ogr_inf_golgfags_maneaters", "special", 2},
+    {"wh3_dlc26_ogr_inf_golgfags_maneaters", "special", 3},
     {"wh3_dlc26_ogr_inf_pigback_riders", "special", 1},
     {"wh3_dlc26_ogr_mon_blood_vultures", "special", 1},
     {"wh3_dlc26_ogr_mon_yhetees", "special", 2},
