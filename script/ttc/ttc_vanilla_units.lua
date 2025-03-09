@@ -1060,12 +1060,12 @@ local wh2_units = {
     {"wh2_dlc10_hef_inf_the_scions_of_mathlann_ror_0", "core"},
     {"wh2_dlc10_hef_inf_the_storm_riders_ror_0", "core"},
     {"wh2_dlc15_hef_inf_archers_ror_0", "core"},
+    {"wh2_dlc10_hef_cav_the_heralds_of_the_wind_ror_0", "core"},
     --SPECIAL
     {"wh2_dlc10_hef_inf_the_silverpelts_ror_0", "special", 1},
     {"wh2_dlc10_hef_inf_keepers_of_the_flame_ror_0", "special", 2},
     {"wh2_dlc10_hef_inf_the_grey_ror_0", "special", 1},
     {"wh2_dlc10_hef_cav_the_fireborn_ror_0", "special", 2},
-    {"wh2_dlc10_hef_cav_the_heralds_of_the_wind_ror_0", "special", 1},
     {"wh2_dlc15_hef_mon_war_lions_of_chrace_ror_0", "special", 1},
     --RARE
     {"wh2_dlc10_hef_inf_everqueens_court_guards_ror_0", "rare", 1},

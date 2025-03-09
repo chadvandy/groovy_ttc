@@ -615,6 +615,20 @@ mod.does_unit_exist = function(unit_key)
   return mod.units[unit_key] ~= nil
 end
 
+--- Get an associated TTC Character object for the
+--- provided character CQI.
+---@param cqi number
+---@return ttc_character?
+function mod.get_character_record(cqi) 
+  if not is_number(cqi) then
+    return
+  end
+
+  -- Return the character record saved with this CQI as its index.
+  -- May be nil.
+  return mod.characters[cqi]
+end
+
 ---@return ttc_character|nil
 mod.get_selected_character_record = function()
   --[[ note: this causes bugs.
@@ -622,12 +636,23 @@ mod.get_selected_character_record = function()
     return mod.characters[mod.selected_character]
   end
   --]]
-  if cm:get_campaign_ui_manager():get_char_selected_cqi() == -1 then
+
+  local cqi = cm:get_campaign_ui_manager():get_char_selected_cqi()
+
+  if cqi == -1 then
     out("No character selected to fetch the record from")
     return nil
   end
-  return mod.characters[cm:get_campaign_ui_manager():get_char_selected_cqi()] or 
-  ttc_character.new(cm:get_character_by_cqi(cm:get_campaign_ui_manager():get_char_selected_cqi()))
+
+  -- Test to see if there's an extant TTC character object held with this CQI.
+  local ext = mod.characters[cqi]
+
+  -- No TTC character object found; create a new one.
+  if is_nil(ext) then
+    ext = ttc_character.new(cm:get_character_by_cqi(cqi))
+  end
+
+  return ext
 end
 
 -----------------------------------------------------------------------------------------------------------
@@ -1485,6 +1510,7 @@ mod.add_listeners = function()
     function(context)
       return context:character():has_military_force() and context:character():faction():name() == cm:get_local_faction_name(true) and mod.force_has_caps(context:character():military_force())
     end,
+    ---@param context CharacterSelected
     function(context)
       local character = context:character()
       out("TTC main path start: human selected "..character:command_queue_index())
@@ -1493,26 +1519,34 @@ mod.add_listeners = function()
       --clear any recruitment listeners we have out.
       mod.remove_recruitment_listeners()
       mod.remove_warband_listeners()
+
       --reset the last recruitment panel variable so that panel opened instructions fire again on the next tick.
       mod.last_panel_open = ""
+
+      local cqi = character:command_queue_index()
+
       --is the panel already open?
       if mod.is_units_panel_open() then
         out("Units Panel is open already")
         --if so, we need to wait for it to refresh with the units from our new character.
-        cm:callback(function() 
+        cm:real_callback(function()
           out("The delayed character select callback is firing")
-          mod.select_character(mod.get_selected_character_record().interface)
+
+          mod.select_character(cm:get_character_by_cqi(cqi))
+
           if mod.get_current_panel() == "" then
             mod.destroy_icons_on_army_units_panel()
           end
-        end, 0.1)
-        core:trigger_event("ModScriptEventRefreshUnitCards")
+        
+          core:trigger_event("ModScriptEventRefreshUnitCards")
+        end, 10)
       else
         out("The units panel isn't open yet")
         --queue up a panel opened callback for the units panel
         mod.panels_open_callback(function(context)
           out("Units panel open callback set on character select is firing")
-          mod.select_character(mod.get_selected_character_record().interface)
+          mod.select_character(cm:get_character_by_cqi(cqi))
+
           mod.destroy_icons_on_army_units_panel()
         end, "units_panel")
       end
@@ -1960,9 +1994,16 @@ mod.check_ai_character = function(character, read_only)
   if not character_record then
     return
   end
+
   character_record:refresh_budget()
   character_record:refresh_special_rules()
   local removed_any_unit = false
+
+  -- Only go on if this character contains any military force.
+  if not character:has_military_force() then
+    return
+  end
+
   local unit_list = character:military_force():unit_list() ---@type any
   for i = 0, unit_list:num_items() -1 do
     local unit_record = mod.get_unit(unit_list:item_at(i):unit_key(), character_record)
@@ -1970,13 +2011,18 @@ mod.check_ai_character = function(character, read_only)
       character_record:apply_cost_of_unit(unit_record)
     end
   end
-  local groups = {"special", "rare"}
-  local removed_units = {}
+  
+  -- Stop here if we're only reading the character.
   if read_only then
     character_record:print_state()
     --mod.characters[character:command_queue_index()] = nil
     return
   end
+  
+  local groups = {"special", "rare"}
+  local removed_units = {}
+
+
   for k = 1, #groups do
     local group_key = groups[k]
     removed_units[group_key] = {}
@@ -2033,6 +2079,8 @@ mod.check_ai_character = function(character, read_only)
       end
     end
   end
+
+
   if character:faction():is_human() then
     --we don't want to delete a human's record in case they're currently using the UI
   else
@@ -2040,8 +2088,12 @@ mod.check_ai_character = function(character, read_only)
     out("Checked AI Character: "..char_cqi)
     mod.characters[char_cqi] = nil
   end
-  if removed_any_unit then 
-    mod.do_colonel_check_on_force(character:military_force());
+
+
+  if removed_any_unit then
+    if character:has_military_force() then
+      mod.do_colonel_check_on_force(character:military_force());
+    end
   end
 end
 
@@ -2102,7 +2154,9 @@ end
 
 ---@param force MILITARY_FORCE_SCRIPT_INTERFACE 
 mod.do_colonel_check_on_force = function (force)
-  mod.do_colonel_check_on_faction(force:faction());
+  if not is_nil(force) and not force:is_null_interface() then
+    mod.do_colonel_check_on_faction(force:faction());
+  end
 end
 
 

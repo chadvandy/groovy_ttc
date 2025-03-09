@@ -4,7 +4,6 @@
 --- to the various point limits.
 ---]]
 
-
 local mct = get_mct()
 local loc_prefix = "mct_ttc_"
 local ttc = mct:register_mod("ttc")
@@ -48,14 +47,17 @@ local options_list = {
 } ---@type string[]
 
 enable:add_option_set_callback(
-    function(option) 
-        local val = option:get_selected_setting() 
-        --# assume val: boolean
+    function(context) 
+        ---@type boolean
+        local val = context:setting()
+        local mod = context:option():get_mod()
+
         local options = options_list
 
         for i = 1, #options do
-            local option_obj = option:get_mod():get_option_by_key(options[i])
+            local option_obj = mod:get_option_by_key(options[i])
             option_obj:set_uic_visibility(val)
         end
-    end
+    end,
+    true
 )
