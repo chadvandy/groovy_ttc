@@ -77,7 +77,48 @@ end
 
 ---@class tabletopcaps
 local mod = {
-  name = "TTC"
+  name = "TTC",
+
+  selected_character = 0,
+
+  ui_settings = {
+    path_to_recruitment_sources = {
+      [1] = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", 
+      "recruitment_listbox", "recruitment_pool_list", "list_clip", "list_box"},
+      [2] = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options",
+        "recruitment_listbox"}
+    },
+
+    path_from_source_to_unit_list = {"unit_list", "listview", "list_clip", "list_box"},
+
+    path_to_mercenary_unit_list = {
+      {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display",
+       "listview", "list_clip", "list_box"}
+    },
+
+    path_to_allied_unit_list = {
+      {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "allied_recuitment_display", "recruitment_holder", "unit_list", 
+      "listview", "list_clip", "allied_unit_list"}
+    },
+
+    path_to_mercenary_cap = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display","frame", "mercenary_cap_holder", "tx_merc_count"},
+
+    groups_to_pips = {
+      ["core"] = {[1] = "ui/custom/recruitment_controls/common_units.png"},
+      ["special"] = {
+        [1] = "ui/custom/recruitment_controls/special_units_1.png",
+        [2] = "ui/custom/recruitment_controls/special_units_2.png",
+        [3] = "ui/custom/recruitment_controls/special_units_3.png"
+      },
+      ["rare"] = {
+        [1] = "ui/custom/recruitment_controls/rare_units_1.png",
+        [2] = "ui/custom/recruitment_controls/rare_units_2.png",
+        [3] = "ui/custom/recruitment_controls/rare_units_3.png"
+      }
+    },
+
+    ttc_meter_prefix = "ttc_points_"
+  }
 } 
 
 --- Display output for this mod.
@@ -88,44 +129,6 @@ end
 
 -- TODO Build this all in a single call instead of reindexing `mod`?
 
-mod.ui_settings = {}
---mod.version = 0 
--- :root:units_panel:main_units_panel:recruitment_docker:recruitment_options:recruitment_listbox
-mod.ui_settings.path_to_recruitment_sources = {
-  [1] = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", 
-    "recruitment_listbox", "recruitment_pool_list", "list_clip", "list_box"},
-  [2] = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options",
-     "recruitment_listbox"}
-}
-mod.ui_settings.path_from_source_to_unit_list = {"unit_list", "listview", "list_clip", "list_box"}
-mod.ui_settings.path_to_mercenary_unit_list = {
-  {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display",
-   "listview", "list_clip", "list_box"}
-}
-mod.ui_settings.path_to_allied_unit_list = {
-  {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "allied_recuitment_display", "recruitment_holder", "unit_list", 
-  "listview", "list_clip", "allied_unit_list"}
-}
-
-mod.ui_settings.path_to_mercenary_cap = {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display","frame", "mercenary_cap_holder", "tx_merc_count"}
-
-mod.ui_settings.groups_to_pips = {
-  ["core"] = {[1] = "ui/custom/recruitment_controls/common_units.png"},
-  ["special"] = {
-    [1] = "ui/custom/recruitment_controls/special_units_1.png",
-    [2] = "ui/custom/recruitment_controls/special_units_2.png",
-    [3] = "ui/custom/recruitment_controls/special_units_3.png"
-  },
-  ["rare"] = {
-    [1] = "ui/custom/recruitment_controls/rare_units_1.png",
-    [2] = "ui/custom/recruitment_controls/rare_units_2.png",
-    [3] = "ui/custom/recruitment_controls/rare_units_3.png"
-  }
-}
-mod.ui_settings.ttc_meter_prefix = "ttc_points_"
-
--- :root:units_panel:main_units_panel:recruitment_docker:recruitment_options:allied_recuitment_display:recruitment_holder:unit_list:listview:list_clip:allied_unit_list
--- :root:units_panel:main_units_panel:recruitment_docker:recruitment_options:mercenary_display:frame:listview:list_clip:list_box
 
 
 ---Who to check for what special rules
@@ -164,8 +167,6 @@ mod.mercenaries_in_queue = {}
 mod.card_listeners_active = {
 
 }---@type table<UIC_Address, boolean>
-
-mod.selected_character = 0
 
 ---@alias unit_selection_entry {index: integer, context_id: string|integer, main_unit_key: string}
 mod.unit_selection = {} ---@type unit_selection_entry[]
@@ -377,6 +378,8 @@ ttc_character.new = function(character)
     out("WTF? Character "..self.cqi.." was sent to TTC character constructor but has no military_force")
     return
   end
+
+  -- TODO Remove this; should be routed through a function in mod instead of in ttc_charcter's creator.
   mod.characters[self.cqi] = self
   self.is_clone = false
   self.units = {} ---@type table<string, ttc_unit>
@@ -2166,9 +2169,12 @@ mod.add_ai_listeners = function()
   core:add_listener(
     "TTCAIListeners",
     "UnitTrained",
+    ---@param context UnitTrained
     function (context)
-      return context:unit():military_force():has_general() and not context:unit():faction():is_human() 
-      and mod.force_has_caps(context:unit():military_force())
+      return 
+        context:unit():military_force():has_general() 
+        and not context:unit():faction():is_human() 
+        and mod.force_has_caps(context:unit():military_force())
     end,
     function (context)
       mod.add_character_to_adjustment_queue(context:unit():force_commander(), true)
@@ -2181,7 +2187,10 @@ mod.add_ai_listeners = function()
     "CharacterTurnStart",
     function(context)
       local character = context:character()
-        return (not character:faction():is_human()) and character:has_military_force() and mod.force_has_caps(character:military_force())
+      return 
+        (not character:faction():is_human()) 
+        and character:has_military_force() 
+        and mod.force_has_caps(character:military_force())
     end,
     function(context)
       mod.add_character_to_adjustment_queue(context:character())
@@ -2212,6 +2221,7 @@ mod.add_ai_listeners = function()
       end
 		end,
 		true);
+
   --same deal for army spawns in general.
   core:add_listener(
 		"TTCAIListeners",
@@ -2242,6 +2252,7 @@ mod.add_ai_listeners = function()
         false);
 		end,
 		true);
+    
     out("TTC AI listeners active; executing first tick colonel check")
     for j = 0, cm:model():world():faction_list():num_items() - 1 do
       local faction = cm:model():world():faction_list():item_at(j)
