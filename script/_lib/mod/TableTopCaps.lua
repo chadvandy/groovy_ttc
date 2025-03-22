@@ -2887,26 +2887,34 @@ end
 mod.display_costs_on_unit_browser = function()
  -- :root:spell_browser:panel_clip:units_tab_parent:main_holder:units_listview:list_clip:list_box
   local ut_parent = find_uicomponent(core:get_ui_root(), "spell_browser", "panel_clip", "units_tab_parent")
+
+  if not ut_parent then return end
+
   local category_list = find_uicomponent(ut_parent, "main_holder", "units_listview", "list_clip", "list_box")
-  
-  local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
-  for i = 0, category_list:ChildCount() - 1 do
-    local this_category = UIComponent(category_list:Find(i))
-    -- :CcoGroupList7403738784:roster_list:CcoUnitsCustomBattlePermissionRecordwh3_main_ksl_inf_kossars_0:wh3_main_ksl_kislev:0
-    local roster_list = find_uicomponent(this_category, "roster_list")
-    for j = 0, roster_list:ChildCount() - 1 do
-      local this_unit = UIComponent(roster_list:Find(j))
-      mod.set_unit_browser_card_display(this_unit, should_display)
+
+  if is_uicomponent(category_list) then
+    local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
+    for i = 0, category_list:ChildCount() - 1 do
+      local this_category = UIComponent(category_list:Find(i))
+      -- :CcoGroupList7403738784:roster_list:CcoUnitsCustomBattlePermissionRecordwh3_main_ksl_inf_kossars_0:wh3_main_ksl_kislev:0
+      local roster_list = find_uicomponent(this_category, "roster_list")
+      for j = 0, roster_list:ChildCount() - 1 do
+        local this_unit = UIComponent(roster_list:Find(j))
+        mod.set_unit_browser_card_display(this_unit, should_display)
+      end
     end
   end
+
   local race_holder = find_uicomponent(ut_parent, "race_holder")
-  local toggle_caps, was_created = core:get_or_create_component("spell_browser_cap_toggle", "ui/templates/square_button_toggle_40", race_holder)
-  if was_created and should_display then
-    toggle_caps:SetState("selected")
+  if is_uicomponent(race_holder) then
+    local toggle_caps, was_created = core:get_or_create_component("spell_browser_cap_toggle", "ui/templates/square_button_toggle_40", race_holder)
+    if was_created and should_display then
+      toggle_caps:SetState("selected")
+    end
+    toggle_caps:SetDockingPoint(6)
+    toggle_caps:SetImagePath("ui/custom/recruitment_controls/fuckoffbutton.png")
+    toggle_caps:SetTooltipText(common.get_localised_string("ttc_show_costs"), true)
   end
-  toggle_caps:SetDockingPoint(6)
-  toggle_caps:SetImagePath("ui/custom/recruitment_controls/fuckoffbutton.png")
-  toggle_caps:SetTooltipText(common.get_localised_string("ttc_show_costs"), true)
 
   core:add_listener(
     "TTCUnitBrowser",
@@ -2918,10 +2926,9 @@ mod.display_costs_on_unit_browser = function()
         should_display = not should_display
         core:svr_save_registry_bool("spell_browser_cap_toggle", not should_display)
     end,
-    true)
-
-  end
-
+    true
+  )
+end
 
 mod.unit_browser_listeners = function()
 
