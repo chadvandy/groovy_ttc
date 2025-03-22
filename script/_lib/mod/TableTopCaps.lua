@@ -1510,8 +1510,13 @@ mod.add_listeners = function()
   core:add_listener(
     "TTCMainListeners",
     "CharacterSelected",
+    ---@param context CharacterSelected
     function(context)
-      return context:character():has_military_force() and context:character():faction():name() == cm:get_local_faction_name(true) and mod.force_has_caps(context:character():military_force())
+      local character = context:character()
+
+      return character:has_military_force() and character:faction():name() == cm:get_local_faction_name(true)
+             and mod.force_has_caps(character:military_force())
+      -- return context:character():has_military_force() and context:character():faction():name() == cm:get_local_faction_name(true) and mod.force_has_caps(context:character():military_force())
     end,
     ---@param context CharacterSelected
     function(context)
