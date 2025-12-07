@@ -3,7 +3,9 @@
     "diagnostics_files_to_ignore": "",
     "import_files_to_ignore": ".git/\n.github/\n.vscode/\n.gitignore\nsettings.rpfm_reserved"
   },
-  "settings_string": {},
+  "settings_string": {
+    "compression_format": "None"
+  },
   "settings_bool": {
     "disable_autosaves": false,
     "do_not_generate_existing_locs": false

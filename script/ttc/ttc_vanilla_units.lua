@@ -1533,6 +1533,95 @@ local dlc_26_units = {
     {"wh3_main_vmp_inf_grave_guard_2", "special", 1}
 }
 
+local dlc_27_units = {
+    -- beastmen
+    {"wh3_dlc27_bst_mon_cockatrice", "rare", 2},
+    {"wh3_dlc27_bst_inf_slaangors", "special", 1},
+    {"wh3_dlc27_bst_mon_preyton", "rare", 2},
+    {"wh3_dlc27_bst_mon_preyton_ror", "rare", 2},
+    {"wh3_dlc27_bst_mon_chimera", "rare", 2},
+    {"wh3_dlc27_bst_mon_chimera_ror", "rare", 2},
+
+    -- high elves
+    {"wh3_dlc27_hef_inf_ships_company", "core"},
+    {"wh3_dlc27_hef_inf_ships_company_ror", "core"},
+    {"wh3_dlc27_hef_inf_swordmasters_of_hoeth_ror", "special", 2},
+    {"wh3_dlc27_hef_inf_oceanids", "special", 3},
+    {"wh3_dlc27_hef_veh_skycutter_bows", "rare", 1},
+    {"wh3_dlc27_hef_veh_skycutter_bolt_thrower", "rare", 2},
+    {"wh3_dlc27_hef_mon_merwyrm", "rare", 3},
+    {"wh3_dlc27_hef_mon_merwyrm_ror", "rare", 3},
+    {"wh3_dlc27_hef_mon_sea_elemental", "rare", 3},
+
+    -- norsca / chaos
+    {"wh3_dlc27_chs_inf_chaos_warriors_0", "core"},
+    {"wh3_dlc27_chs_inf_chaos_warriors_1", "core"},
+    {"wh3_dlc27_chs_inf_chaos_warriors_2", "core"},
+    {"wh3_dlc27_chs_inf_chaos_warriors_mnur_greatweapons", "core"},
+    {"wh3_dlc27_chs_inf_chaos_warriors_msla_hellscourges", "core"},
+    {"wh3_dlc27_chs_inf_chaos_warriors_mtze_halberds", "core"},
+    {"wh3_dlc27_kho_inf_chaos_warriors_2", "core"},
+    {"wh3_dlc27_nor_cav_marauder_horsemen_ror", "core"},
+    {"wh3_dlc27_nor_cav_chaos_chariot_ror", "core"},
+    {"wh3_dlc27_nor_inf_chaos_marauders_great_weapons_ror", "core"},
+    {"wh3_dlc27_nor_cav_kurgan_horsemen_dualweapons", "special", 1},
+    {"wh3_dlc27_nor_cav_kurgan_horsemen_greatweapons", "special", 1},
+    {"wh3_dlc27_nor_inf_marauder_bearmen", "special", 1},
+    {"wh3_dlc27_nor_inf_marauder_bearmen_greatweapons", "special", 1},
+    {"wh3_dlc27_throgg_mon_chs_trolls_0", "special", 1},
+    {"wh3_dlc27_throgg_mon_chs_trolls_1", "special", 1},
+    {"wh3_dlc27_throgg_mon_river_trolls_0", "special", 2},
+    {"wh3_dlc27_throgg_mon_stone_trolls_0", "special", 2},
+    {"wh3_dlc27_chs_mon_chaos_spawn", "rare", 1},
+    {"wh3_dlc27_kho_mon_spawn_of_khorne_0", "rare", 1},
+    {"wh3_dlc27_nur_mon_spawn_of_nurgle_0", "rare", 1},
+    {"wh3_dlc27_sla_mon_spawn_of_slaanesh_0", "rare", 1},
+    {"wh3_dlc27_tze_mon_spawn_of_tzeentch_0", "rare", 1},
+    {"wh3_dlc27_nor_mon_chimera", "rare", 2},
+    {"wh3_dlc27_nor_mon_chimera_ror", "rare", 2},
+    {"wh3_dlc27_nor_mon_dread_maw", "rare", 2},
+    {"wh3_dlc27_nor_mon_dread_maw_underground", "rare", 2},
+    {"wh3_dlc27_throgg_mon_bile_trolls", "rare", 2},
+    {"wh3_dlc27_nor_mon_cursd_ettin", "rare", 3},
+    {"wh3_dlc27_nor_mon_cursd_ettin_runecaller", "rare", 3},
+
+    -- slaanesh
+    {"wh3_dlc27_sla_inf_chaos_furies_dechala", "special", 1},
+    {"wh3_dlc27_sla_inf_slaangors", "special", 1},
+    {"wh3_dlc27_sla_veh_seeker_chariot_ror", "special", 1},
+    {"wh3_dlc27_sla_inf_devotees_of_slaanesh", "special", 1},
+    {"wh3_dlc27_sla_inf_devotees_of_slaanesh_crossbows", "special", 2},
+    {"wh3_dlc27_sla_inf_daemonette_1_dechala", "special", 2},
+    {"wh3_dlc27_sla_mon_fiends_of_slaanesh_dechala", "special", 2},
+    {"wh3_dlc27_sla_mon_champions_of_slaanesh", "special", 3},
+    {"wh3_dlc27_sla_mon_champions_of_slaanesh_ror", "special", 3},
+    {"wh3_dlc27_sla_cav_heartseekers_of_slaanesh_dechala", "rare", 2},
+    {"wh3_dlc27_sla_cav_pleasureseekers", "rare", 2},
+    {"wh3_dlc27_sla_cav_pleasureseekers_dechala", "rare", 2},
+    {"wh3_dlc27_sla_mon_preyton", "rare", 2},
+    {"wh3_dlc27_sla_mon_preyton_ror", "rare", 2},
+    {"wh3_dlc27_sla_veh_exalted_seeker_chariot_dechala", "rare", 2},
+    {"wh3_dlc27_sla_mon_keeper_of_secrets_dechala", "rare", 3},
+}
+
+local errata = {
+    -- Missing vanilla units
+    {"wh3_main_ogr_inf_gnoblars_flingers", "core"},
+    {"wh3_main_cth_inf_grenadiers", "core"},
+    {"wh3_dlc24_bst_mon_cockatrice", "rare", 2},
+    {"wh3_main_vmp_blood_knights_sword_shield", "rare", 2},
+    {"wh3_main_chd_art_hobgob_bolt_thrower", "special", 2},
+    {"wh2_dlc12_lzd_cav_ripperdactyl_riders_0_blessed", "special", 1},
+    {"wh2_dlc12_lzd_mon_ancient_salamander_0_blessed", "rare", 1},
+    {"wh2_dlc12_lzd_mon_salamander_pack_0_blessed", "special", 2},
+    {"wh2_dlc13_lzd_mon_razordon_pack_0_blessed", "special", 2},
+    {"wh2_dlc13_lzd_mon_sacred_kroxigors_0_blessed", "special", 2},
+    {"wh2_dlc17_lzd_inf_chameleon_stalkers_0_blessed", "rare", 1},
+    {"wh2_main_lzd_cav_terradon_riders_0_blessed", "special", 1},
+    {"wh2_main_lzd_inf_skink_cohort_1_blessed", "core"},
+    {"wh2_main_lzd_mon_ancient_stegadon_blessed", "rare", 3},
+}
+
 
 ---special rules are set up in the database using effects, however, flagging them here is necessary because it is too expensive for the script to check all 1600 possible units for a special rule.
 ---Valid flags are "subtype", "faction" and "subculture"
@@ -1557,6 +1646,9 @@ ttc.add_setup_callback(function()
     ttc.add_unit_list(reputation_salvaging_dlc_units, true)
     ttc.add_unit_list(dlc_25_units, true)
     ttc.add_unit_list(dlc_26_units, true)
+    ttc.add_unit_list(dlc_27_units, true)
+    ttc.add_unit_list(errata, true)
+
 
     for subculture_key, unit_list in pairs(subculture_defaults) do
         ttc.add_replacement_units_for_subculture(subculture_key, unit_list)
