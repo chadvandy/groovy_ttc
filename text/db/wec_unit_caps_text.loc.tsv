@@ -10,8 +10,10 @@ ttc_army_unlimited	Armies may have an unlimited number of 0000 units. 	false
 ttc_unit_no_cost	This unit is a 0000 unit.	false
 ttc_meter_tooltip	[[col:yellow]]2222 3333[[/col]]\\nYou have used 0000 of the 1111 3333 available to this force!\\n	false
 ttc_restriction_tooltip	[[col:red]]You have insufficient 0000 1111 available.[[/col]]	false
-effects_description_df_core_snow_leopard	[[col:yellow]]Special Rule: [[/col]] Katarin can recruit Snow Leopards as Core units in her armies.	true
+effects_description_df_core_snow_leopard	[[col:yellow]]Tabletop Caps:[[/col]] Snow Leopards can be recruited as [[img:UI/custom/recruitment_controls/common_units.png]]Core[[/img]][[/img]] (instead of [[img:UI/custom/recruitment_controls/special_units_1.png]]Special) 	true
 ttc_show_costs	Toggle displaying Tabletop Caps categories and values on unit cards.	true
-effects_description_df_core_plague_monks	[[col:yellow]]Special Rule: [[/col]] Lord Skrolk can recruit Plague Monks as Core units in his army.	true
+effects_description_df_core_plague_monks	[[col:yellow]]Tabletop Caps:[[/col]] Plague Monks can be recruited as [[img:UI/custom/recruitment_controls/common_units.png]]Core[[/img]][[/img]] (instead of [[img:UI/custom/recruitment_controls/special_units_1.png]]Special)	true
 ttc_warband_upgrade_cost	This upgrade requires 0000 1111 2222 per unit upgraded.	true
-effects_description_df_core_infernal_guard	[[col:yellow]]Special Rule: [[/col]] Drazhoath the Ashen can recruit Infernal Guard as Core units in his army.	false
+effects_description_df_core_infernal_guard	[[col:yellow]]Tabletop Caps:[[/col]] Infernal Guards can be recruited as [[img:UI/custom/recruitment_controls/common_units.png]]Core[[/img]][[/img]] (instead of [[img:UI/custom/recruitment_controls/special_units_1.png]]Special)	false
+effects_description_df_core_tiger_warriors	[[col:yellow]]Tabletop Caps: [[/col]] Tiger Warriors can be recruited as [[img:UI/custom/recruitment_controls/common_units.png]]Core[[/img]][[/img]] (instead of [[img:UI/custom/recruitment_controls/special_units_1.png]]Special)	false
+effects_description_df_core_warriors_of_ulric	[[col:yellow]]Tabletop Caps: [[/col]] Warriors of Ulric can be recruited as [[img:UI/custom/recruitment_controls/common_units.png]]Core[[/img]][[/img]] (instead of [[img:UI/custom/recruitment_controls/special_units_1.png]]Special)	false

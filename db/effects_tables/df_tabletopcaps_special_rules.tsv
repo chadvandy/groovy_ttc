@@ -3,3 +3,5 @@ effect	icon	priority	icon_negative	category	is_positive_value_good
 df_core_snow_leopard	common_units.png	15	common_units.png	campaign	true
 df_core_plague_monks	common_units.png	15	common_units.png	campaign	true
 df_core_infernal_guard	common_units.png	15	common_units.png	campaign	true
+df_core_tiger_warriors	common_units.png	15	common_units.png	campaign	true
+df_core_warriors_of_ulric	common_units.png	15	common_units.png	campaign	true

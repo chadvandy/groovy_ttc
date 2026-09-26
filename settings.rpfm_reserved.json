@@ -1,7 +1,7 @@
 {
   "settings_text": {
     "diagnostics_files_to_ignore": "",
-    "import_files_to_ignore": ".git/\n.github/\n.vscode/\n.gitignore\nsettings.rpfm_reserved"
+    "import_files_to_ignore": ".git/\n.github/\n.vscode/\n.gitignore\nsettings.rpfm_reserved\n.luarc.json"
   },
   "settings_string": {
     "compression_format": "None"

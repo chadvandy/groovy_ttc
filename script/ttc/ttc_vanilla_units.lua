@@ -783,7 +783,7 @@ local wh2_units = {
     {"wh_dlc08_nor_inf_marauder_hunters_1", "core"},
     {"wh_dlc08_nor_cav_marauder_horsemasters_0", "core"},
     --SPECIAL
-    {"wh_main_nor_mon_chaos_trolls", "special", 2},
+    {"wh_main_nor_mon_chaos_trolls", "special", 1},
     {"wh_dlc08_nor_mon_warwolves_0", "special", 1},
     {"wh_dlc08_nor_mon_norscan_ice_trolls_0", "special", 2},
     {"wh_dlc08_nor_feral_manticore", "special", 2},
@@ -1399,11 +1399,11 @@ local dlc_25_units = {
     {"wh3_dlc25_emp_veh_marienburg_land_ship_ror", "rare", 2},
     {"wh3_dlc25_emp_veh_steam_tank_volley_gun", "rare", 3},
     {"wh3_dlc25_nur_cav_plague_drones_1_ror", "rare", 1},
-    {"wh3_dlc25_nur_cav_rot_knights", "special", 3},
-    {"wh3_dlc25_nur_cav_rot_knights_ror", "special", 3},
+    {"wh3_dlc25_nur_cav_rot_knights", "rare", 2},
+    {"wh3_dlc25_nur_cav_rot_knights_ror", "rare", 2},
     {"wh3_dlc25_nur_chieftain_art_hellcannon", "rare", 2},
     {"wh3_dlc25_nur_chieftain_cav_chaos_chariot_mnur", "core"},
-    {"wh3_dlc25_nur_chieftain_cav_rot_knights", "special", 2},
+    {"wh3_dlc25_nur_chieftain_cav_rot_knights", "rare", 2},
     {"wh3_dlc25_nur_chieftain_inf_aspiring_champions_0", "special", 2},
     {"wh3_dlc25_nur_chieftain_inf_centigors_1", "special", 1},
     {"wh3_dlc25_nur_chieftain_inf_chaos_dwarf_blunderbusses", "core"},
@@ -1420,9 +1420,9 @@ local dlc_25_units = {
     {"wh3_dlc25_nur_chieftain_mon_war_mammoth_1", "rare", 3},
     {"wh3_dlc25_nur_chieftain_veh_dreadquake_mortar", "rare", 3},
     {"wh3_dlc25_nur_inf_pestigors", "special", 1},
-    {"wh3_dlc25_nur_inf_plague_ogres", "rare", 2},
-    {"wh3_dlc25_nur_inf_plague_ogres_great_weapons", "rare", 2},
-    {"wh3_dlc25_nur_mon_bile_trolls", "rare", 2},
+    {"wh3_dlc25_nur_inf_plague_ogres", "special", 3},
+    {"wh3_dlc25_nur_inf_plague_ogres_great_weapons", "special", 3},
+    {"wh3_dlc25_nur_mon_bile_trolls", "rare", 1},
     {"wh3_dlc25_nur_mon_soul_grinder_0_ror", "rare", 2},
     {"wh3_dlc25_nur_mon_toad_dragon", "rare", 3},
     {"wh_main_dwf_art_flame_cannon_grudge_reward", "rare", 2},
@@ -1581,7 +1581,7 @@ local dlc_27_units = {
     {"wh3_dlc27_nor_mon_chimera_ror", "rare", 2},
     {"wh3_dlc27_nor_mon_dread_maw", "rare", 2},
     {"wh3_dlc27_nor_mon_dread_maw_underground", "rare", 2},
-    {"wh3_dlc27_throgg_mon_bile_trolls", "rare", 2},
+    {"wh3_dlc27_throgg_mon_bile_trolls", "rare", 1},
     {"wh3_dlc27_nor_mon_cursd_ettin", "rare", 3},
     {"wh3_dlc27_nor_mon_cursd_ettin_runecaller", "rare", 3},
 
@@ -1602,6 +1602,32 @@ local dlc_27_units = {
     {"wh3_dlc27_sla_mon_preyton_ror", "rare", 2},
     {"wh3_dlc27_sla_veh_exalted_seeker_chariot_dechala", "rare", 2},
     {"wh3_dlc27_sla_mon_keeper_of_secrets_dechala", "rare", 3},
+    
+    -- monstrous arcanum
+    {"wh3_dlc27_bst_inf_cygor_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_bst_inf_cygor_monst_arcanum_reward", "rare", 3},
+    {"wh3_dlc27_bst_mon_ghorgon_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_bst_mon_ghorgon_monst_arcanum_reward", "rare", 3},
+    {"wh3_dlc27_bst_mon_jabberslythe_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_bst_mon_jabberslythe_monst_arcanum_reward", "rare", 3},
+    {"wh3_dlc27_chd_mon_bale_taurus_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_chd_mon_lammasu_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_chs_feral_manticore_monst_arcanum", "special", 2},
+    {"wh3_dlc27_chs_feral_manticore_monst_arcanum_reward", "special", 2},
+    {"wh3_dlc27_chs_mon_dragon_ogre_shaggoth_monst_arcanum_reward", "rare", 3},
+    {"wh3_dlc27_cth_mon_celestial_lion_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_def_mon_black_dragon_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_lzd_mon_dread_saurian_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_nor_mon_chimera_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_nor_mon_chimera_monst_arcanum_reward", "rare", 2},
+    {"wh3_dlc27_nur_mon_toad_dragon_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_nur_mon_toad_dragon_monst_arcanum_reward", "rare", 3},
+    {"wh3_dlc27_ogr_mon_thundertusk_monst_arcanum", "rare", 3},
+    {"wh3_dlc27_sla_mon_preyton_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_sla_mon_preyton_monst_arcanum_reward", "rare", 2},
+    {"wh3_dlc27_tmb_mon_carrion_monst_arcanum", "special", 1},
+    {"wh3_dlc27_tze_mon_cockatrice_monst_arcanum", "rare", 2},
+    {"wh3_dlc27_tze_mon_cockatrice_monst_arcanum_reward", "rare", 2},
 }
 
 local errata = {
@@ -1622,16 +1648,89 @@ local errata = {
     {"wh2_main_lzd_mon_ancient_stegadon_blessed", "rare", 3},
 }
 
+local cp1_units = {
+    {"wh3_cp1_cth_inf_tiger_warriors_dual_axe", "special", 1},
+    {"wh3_cp1_cth_inf_stalkers_throwing_disc", "special", 2},
+    {"wh3_cp1_cth_inf_iron_claw_guandao", "rare", 1},
+    {"wh3_cp1_cth_inf_iron_claw_guandao_summoned", "rare", 1}
+}
+
+local dlc_29_units = {
+    -- undead
+    {"wh3_dlc29_vmp_cav_drakenhof_templars", "rare", 1},
+    {"wh3_dlc29_vmp_inf_lahmian_handmaidens_death", "rare", 1},
+    {"wh3_dlc29_vmp_inf_lahmian_handmaidens_shadow", "rare", 1},
+    {"wh3_dlc29_vmp_inf_spirit_host", "special", 1},	
+    {"wh2_dlc09_tmb_inf_spirit_host", "special", 1},
+    {"wh3_dlc29_vmp_mon_morghast_archai", "rare", 2},
+    {"wh3_dlc29_vmp_mon_morghast_archai_ror", "rare", 2},
+    {"wh3_dlc29_vmp_mon_zombie_dragon", "rare", 3},
+    {"wh3_dlc29_vmp_veh_coven_throne", "rare", 2},
+    {"wh3_dlc29_vmp_mon_morghast_harbingers", "rare", 2},
+    {"wh3_dlc29_tmb_mon_khemric_titan", "rare", 3},
+    {"wh3_dlc29_tmb_mon_khemric_titan_ror", "rare", 3},
+    {"wh3_dlc29_tmb_mon_ushabti_ror_sepulchrex", "special", 2},
+	{"wh2_dlc09_tmb_mon_morghast_archai", "rare", 2},
+    {"wh2_dlc09_tmb_mon_morghast_harbingers", "rare", 2},
+    {"wh2_dlc09_tmb_inf_cairn_wraiths", "rare", 1},
+    {"wh2_dlc09_tmb_mon_crypt_horrors", "special", 2},
+    
+    -- skaven
+	{"wh3_dlc29_skv_art_plagueclaw_catapult_ror", "rare", 1},
+    {"wh3_dlc29_skv_art_warp_doom_magma_cannon", "rare", 2},
+    {"wh3_dlc29_skv_inf_deathvermin_ror", "special", 1},
+    {"wh3_dlc29_skv_inf_pusbags", "core"},
+    {"wh3_dlc29_skv_mon_stormfiend_doomflayer_gauntlets", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiend_grinderfists", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiend_ratling_cannons", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiend_shock_gauntlets", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiend_warpfire_projectors", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiend_windlaunchers", "rare", 1},
+	{"wh3_dlc29_skv_mon_stormfiends_ratling_cannons_ror", "rare", 1},
+	{"wh3_dlc29_skv_veh_cauldron_of_a_thousand_poxes", "rare", 2},
+	
+	-- chaos
+	{"wh3_dlc29_chs_inf_chosen_mnur_ror", "special", 2},
+    {"wh3_dlc29_chs_inf_flayerkin", "core"},
+    {"wh3_dlc29_chs_inf_putrid_blightkings_axe_shield", "rare", 1},
+    {"wh3_dlc29_chs_inf_putrid_blightkings_dual_axe", "rare", 1},
+    {"wh3_dlc29_chs_inf_putrid_blightkings_dual_axe_ror", "rare", 1},
+    {"wh3_dlc29_chs_inf_putrid_blightkings_great_weapons", "rare", 1},
+	{"wh3_dlc29_chs_mon_basilisk", "rare", 2},
+	{"wh3_dlc29_chs_mon_chaos_siege_giant", "rare", 3},
+    {"wh3_dlc29_chd_mon_chaos_siege_giant", "rare", 2},
+	{"wh3_dlc29_chs_mon_giant_spined_chaos_beast", "rare", 3},
+	{"wh3_dlc29_chs_mon_giant_spined_chaos_beast_ror", "rare", 3},
+    {"wh3_dlc27_woc_mon_chimera_ror", "rare", 2},
+	{"wh3_dlc29_bst_mon_basilisk", "rare", 2},
+	{"wh3_dlc29_bst_mon_giant_spined_chaos_beast", "rare", 3},
+	{"wh3_dlc29_bst_mon_giant_spined_chaos_beast_ror", "rare", 3},
+	
+	-- empire
+	{"wh3_dlc29_emp_cav_knights_of_the_white_wolf", "special", 2},
+    {"wh3_dlc29_emp_cav_knights_of_the_white_wolf_ror", "special", 2},
+    {"wh3_dlc29_emp_cav_knights_panther", "special", 2},
+    {"wh3_dlc29_emp_inf_hunting_hounds", "special", 1},
+    {"wh3_dlc29_emp_inf_hunting_hounds_ror", "special", 1},
+    {"wh3_dlc29_emp_inf_teutogen_guard", "rare", 1},
+	{"wh3_dlc29_emp_inf_teutogen_guard_ror", "rare", 1},
+	{"wh3_dlc29_emp_inf_warriors_of_ulric", "special", 1},
+	{"wh3_dlc29_emp_inf_wolf_kin", "special", 1},
+	{"wh3_dlc29_emp_veh_celestial_hurricanum_0", "rare", 3}    
+}
+
 
 ---special rules are set up in the database using effects, however, flagging them here is necessary because it is too expensive for the script to check all 1600 possible units for a special rule.
 ---Valid flags are "subtype", "faction" and "subculture"
 ---multiple flags are OR, not AND. For example: {subculture = wh3_main_sc_ksl_kislev, subtype = wh3_main_ksl_katarin} would apply to anyone who is from the kislev subculture because it means "Is from kislev OR is katarin"
 ---Special rules *do* affect the AI.
 local units_with_special_rules = {
-    {"wh2_main_skv_inf_plague_monks", {subtype = "wh2_main_skv_lord_skrolk"}},
+    {"wh2_main_skv_inf_plague_monks", {subtype = "wh2_main_skv_lord_skrolk", faction = "wh2_main_skv_clan_pestilens"}},
     {"wh3_dlc23_chd_inf_infernal_guard", {subtype = "wh3_dlc23_chd_drazhoath"}},
     {"wh3_dlc23_chd_inf_infernal_guard_fireglaives", {subtype = "wh3_dlc23_chd_drazhoath"}},
-    {"wh3_dlc23_chd_inf_infernal_guard_great_weapons", {subtype = "wh3_dlc23_chd_drazhoath"}}
+    {"wh3_dlc23_chd_inf_infernal_guard_great_weapons", {subtype = "wh3_dlc23_chd_drazhoath"}},
+    {"wh3_cp1_cth_inf_tiger_warriors_dual_axe", {subtype = "wh3_cp1_cth_bhashiva", faction = "wh3_cp1_cth_tiger_warriors"}},
+	{"wh3_dlc29_emp_inf_warriors_of_ulric", {subtype = "wh_dlc03_emp_boris_todbringer", faction = "wh_main_emp_middenland"}}
 }
 
 -- Add in these tables to the TTC controller.
@@ -1648,6 +1747,8 @@ ttc.add_setup_callback(function()
     ttc.add_unit_list(dlc_26_units, true)
     ttc.add_unit_list(dlc_27_units, true)
     ttc.add_unit_list(errata, true)
+    ttc.add_unit_list(cp1_units, true)
+	ttc.add_unit_list(dlc_29_units, true)
 
 
     for subculture_key, unit_list in pairs(subculture_defaults) do
