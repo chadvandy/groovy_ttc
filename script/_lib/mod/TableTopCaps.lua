@@ -91,9 +91,9 @@ local mod = {
 
     path_from_source_to_unit_list = {"unit_list", "listview", "list_clip", "list_box"},
 
-    path_to_mercenary_unit_list = {
+    path_to_mercenary_pool_list = {
       {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display",
-       "listview", "list_clip", "list_box"}
+       "mercenary_recruitment_pool_list", "list_clip", "list_box"}
     },
 
     path_to_allied_unit_list = {
@@ -830,7 +830,9 @@ mod.refresh_icons_on_exchange_bars = function()
       out("Handling unit card "..tostring(i))
       local unitCard = UIComponent(armyList:Find(i))
       local turns = find_uicomponent(unitCard, "card_image_holder", "campaign", "Turns")
-      if turns:Visible() then -- Queued Unit Card
+
+      -- NOTE: Testing for the Turns component having a current state that starts with `queued`.
+      if turns:Visible() and turns:CurrentState():find("^queued") then -- Queued Unit Card
         -- :root:hud_campaign:unit_information_parent:unit_info_panel_holder_parent:unit_info_panel_holder:unit_information
         local ok, err = pcall(function()
           local experience_icon = find_uicomponent(unitCard, "experience")
@@ -1394,26 +1396,41 @@ mod.remove_recruitment_listeners = function()
   out("Cleared Listeners from the recruitment panel")
 end
 
+-- TODO: This function falls into a "local hole" in the UI, because it's searching for any "list_box" underneath the mercenary panel. It's
+-- falling into the lowest list_box, which causes secondary lists to be missed.
 mod.add_listeners_to_mercenary_panel = function()
   out("Installing listeners on unit cards in the mercenary panel")
   local any_new_listeners = false
-  local unitList
-  for i = 1, #mod.ui_settings.path_to_mercenary_unit_list do
-    unitList = find_uicomponent_from_table(core:get_ui_root(), mod.ui_settings.path_to_mercenary_unit_list[i])
-    if unitList and unitList:ChildCount() > 0 then
-      out("Found mercenary unit list "..i)
+  -- local unitList
+
+  -- Get each "recruitment source holder" underneath the mercenary panel.
+  for i = 1, #mod.ui_settings.path_to_mercenary_pool_list do
+    local mercPoolList = find_uicomponent_from_table(core:get_ui_root(), mod.ui_settings.path_to_mercenary_pool_list[i])
+
+    if not mercPoolList then
+      out("[TTC]: Can't find mercenary pool list!")
       break
     end
-  end
-  if not unitList then 
-    out("No mercenary unit lists were found!")
-    out("Either the recruitment panel doesn't exist currently, there are no mercenaries available, or the script is missing a path!")
-  end
-  local count = unitList:ChildCount()
-  out("The mercenary unit list has: "..tostring(count).." options available")
-  for i = 0, count - 1 do
-    local ok = mod.add_listeners_to_recruitable_unit_card(UIComponent(unitList:Find(i)))
-    if ok then any_new_listeners = true end
+    
+    -- From the merc pool list, there will be multiple children, which each have their own list of units.
+    local mercPoolCount = mercPoolList:ChildCount()
+
+    for j = 0, mercPoolCount -1 do
+      local mercPool = UIComponent(mercPoolList:Find(j))
+      local unitList = find_uicomponent(mercPool, "listview", "list_clip", "list_box")
+
+      if not unitList or unitList:ChildCount() <= 0 then
+        out("[TTC]: Can't find recruitment unit list!")
+        break
+      end
+
+      local unitCount = unitList:ChildCount()
+
+      for k = 0, unitCount - 1 do
+        local ok = mod.add_listeners_to_recruitable_unit_card(UIComponent(unitList:Find(k)))
+        if ok then any_new_listeners = true end
+      end
+    end
   end
   
   if any_new_listeners then
@@ -2701,19 +2718,19 @@ mod.setup_exchange = function ()
   out("The exchange panel has opened!")
   core:remove_listener("TTCExchangeListeners")
   mod.refresh_icons_on_exchange_bars()
-  out("1")
+  -- out("1")
   core:trigger_event("ModScriptEventRefreshUnitCards")
   local currently_selected_cqi = cm:get_campaign_ui_manager():get_char_selected_cqi()
-  out("2")
+  -- out("2")
   local character_record_1 = mod.characters[currently_selected_cqi]
   local meters_special = mod.add_or_get_exchange_panel_meters("special")
-  out("3")
+  -- out("3")
   local meters_rare = mod.add_or_get_exchange_panel_meters("rare")
-  out("4")
+  -- out("4")
   mod.add_listeners_to_exchange_meter("special", meters_special[1], currently_selected_cqi)
-  out("5")
+  -- out("5")
   mod.add_listeners_to_exchange_meter("rare", meters_rare[1], currently_selected_cqi)
-  out("6")
+  -- out("6")
   local character_record_2 = mod.get_other_character_in_exchange()
   if not character_record_2 then
     out("Failed to get the other character in exchange, exchange setup failed!")
@@ -2726,6 +2743,8 @@ mod.setup_exchange = function ()
     mod.adjust_exchange_panels()
   end, 0.1)
 
+  -- Handling for the evaluation of points between the two armies. Changes the calculated
+  -- points whenever a unit card is clicked.
   core:add_listener(
     "TTCExchangeListeners",
     "ComponentLClickUp",
@@ -2806,7 +2825,7 @@ mod.setup_exchange = function ()
     end,
     true
   )
-  out("We did everything, I guess?")
+  -- out("We did everything, I guess?")
 end
 
 
@@ -2897,19 +2916,9 @@ mod.display_costs_on_unit_browser = function()
 
   local category_list = find_uicomponent(ut_parent, "main_holder", "units_listview", "list_clip", "list_box")
 
-  if is_uicomponent(category_list) then
-    local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
-    for i = 0, category_list:ChildCount() - 1 do
-      local this_category = UIComponent(category_list:Find(i))
-      -- :CcoGroupList7403738784:roster_list:CcoUnitsCustomBattlePermissionRecordwh3_main_ksl_inf_kossars_0:wh3_main_ksl_kislev:0
-      local roster_list = find_uicomponent(this_category, "roster_list")
-      for j = 0, roster_list:ChildCount() - 1 do
-        local this_unit = UIComponent(roster_list:Find(j))
-        mod.set_unit_browser_card_display(this_unit, should_display)
-      end
-    end
-  end
+  local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
 
+  -- Create the toggle button.
   local race_holder = find_uicomponent(ut_parent, "race_holder")
   if is_uicomponent(race_holder) then
     local toggle_caps, was_created = core:get_or_create_component("spell_browser_cap_toggle", "ui/templates/square_button_toggle_40", race_holder)
@@ -2921,6 +2930,41 @@ mod.display_costs_on_unit_browser = function()
     toggle_caps:SetTooltipText(common.get_localised_string("ttc_show_costs"), true)
   end
 
+  if is_uicomponent(category_list) then
+    for i = 0, category_list:ChildCount() - 1 do
+      local this_category = UIComponent(category_list:Find(i))
+      -- :CcoGroupList7403738784:roster_list:CcoUnitsCustomBattlePermissionRecordwh3_main_ksl_inf_kossars_0:wh3_main_ksl_kislev:0
+      local roster_list = find_uicomponent(this_category, "roster_list")
+      for j = 0, roster_list:ChildCount() - 1 do
+        local this_unit = UIComponent(roster_list:Find(j))
+        mod.set_unit_browser_card_display(this_unit, should_display)
+      end
+    end
+  end
+
+
+  local function refresh_unit_pip_display() 
+    -- Redefine the UI components, as their memory addresses may have slipped.
+    local parent = find_uicomponent(core:get_ui_root(), "spell_browser", "panel_clip", "units_tab_parent")
+
+    if not parent then return end
+
+    local list = find_uicomponent(parent, "main_holder", "units_listview", "list_clip", "list_box")
+
+    for i = 0, list:ChildCount() -1 do
+      local category = UIComponent(list:Find(i))
+
+      local roster_list = find_uicomponent(category, "roster_list")
+      for j = 0, roster_list:ChildCount() -1 do
+        local unit = UIComponent(roster_list:Find(j))
+        local xp = find_uicomponent(unit, "experience")
+        xp:SetVisible(should_display)
+      end
+    end
+  end 
+
+
+  -- Whenever the button is clicked, switch the setting and set the icon on all the units.
   core:add_listener(
     "TTCUnitBrowser",
     "ComponentLClickUp",
@@ -2929,7 +2973,9 @@ mod.display_costs_on_unit_browser = function()
     end,
     function(context)
         should_display = not should_display
-        core:svr_save_registry_bool("spell_browser_cap_toggle", not should_display)
+        core:svr_save_registry_bool("spell_browser_cap_toggle", should_display)
+
+        refresh_unit_pip_display()
     end,
     true
   )
@@ -2937,33 +2983,57 @@ end
 
 mod.unit_browser_listeners = function()
 
-  if __game_mode == __lib_type_campaign then
-    core:add_listener(
-      "TTCUnitBrowser",
-      "ComponentLClickUp",
-      function(context)
-        return mod.is_spell_browser_open() 
-      end,
-      function(context)
-        cm:callback(function() mod.display_costs_on_unit_browser() end, 0.1)
-      end,
-      true
-    )
-  else
-    local tm = core:get_tm()
-    core:add_listener(
-      "TTCUnitBrowser",
-      "ComponentLClickUp",
-      function(context)
-        return mod.is_spell_browser_open() 
-      end,
-      function(context)
-        tm:real_callback(function() mod.display_costs_on_unit_browser() end, 100)
-      end,
-      true
-    )
+  -- TODO This needs to be rewritten to have a single-time panel set up, and a smaller refresh function triggered
+  -- whenever the cap toggle button is pressed.
 
-  end
+  -- Whenever the "unit & spell browser" button is clicked, check to see if the panel is
+  -- opened entirely; once it is, set up our listeners.
+  core:add_listener(
+    "TTCUnitBrowser",
+    "ComponentLClickUp",
+    function(context)
+      return context.string == "button_spell_browser"
+    end,
+    function(context)
+      local tm = core:get_tm()
+      tm:real_callback(function() 
+        if mod.is_spell_browser_open() then
+          mod.display_costs_on_unit_browser()
+        else
+          out("[TTC] Can't find the spell browser! :(")
+        end
+      end, 100)
+    end,
+    true
+  )
+
+  -- if __game_mode == __lib_type_campaign then
+  --   core:add_listener(
+  --     "TTCUnitBrowser",
+  --     "ComponentLClickUp",
+  --     function(context)
+  --       return mod.is_spell_browser_open() 
+  --     end,
+  --     function(context)
+  --       cm:callback(function() mod.display_costs_on_unit_browser() end, 0.1)
+  --     end,
+  --     true
+  --   )
+  -- else
+  --   local tm = core:get_tm()
+  --   core:add_listener(
+  --     "TTCUnitBrowser",
+  --     "ComponentLClickUp",
+  --     function(context)
+  --       return mod.is_spell_browser_open() 
+  --     end,
+  --     function(context)
+  --       tm:real_callback(function() mod.display_costs_on_unit_browser() end, 100)
+  --     end,
+  --     true
+  --   )
+
+  -- end
   --[[
     This doesn't fire for this panel.
   core:add_listener(
