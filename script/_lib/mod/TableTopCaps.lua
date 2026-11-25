@@ -91,9 +91,9 @@ local mod = {
 
     path_from_source_to_unit_list = {"unit_list", "listview", "list_clip", "list_box"},
 
-    path_to_mercenary_unit_list = {
+    path_to_mercenary_pool_list = {
       {"units_panel", "main_units_panel", "recruitment_docker", "recruitment_options", "mercenary_display",
-       "listview", "list_clip", "list_box"}
+       "mercenary_recruitment_pool_list", "list_clip", "list_box"}
     },
 
     path_to_allied_unit_list = {
@@ -1394,26 +1394,41 @@ mod.remove_recruitment_listeners = function()
   out("Cleared Listeners from the recruitment panel")
 end
 
+-- TODO: This function falls into a "local hole" in the UI, because it's searching for any "list_box" underneath the mercenary panel. It's
+-- falling into the lowest list_box, which causes secondary lists to be missed.
 mod.add_listeners_to_mercenary_panel = function()
   out("Installing listeners on unit cards in the mercenary panel")
   local any_new_listeners = false
-  local unitList
-  for i = 1, #mod.ui_settings.path_to_mercenary_unit_list do
-    unitList = find_uicomponent_from_table(core:get_ui_root(), mod.ui_settings.path_to_mercenary_unit_list[i])
-    if unitList and unitList:ChildCount() > 0 then
-      out("Found mercenary unit list "..i)
+  -- local unitList
+
+  -- Get each "recruitment source holder" underneath the mercenary panel.
+  for i = 1, #mod.ui_settings.path_to_mercenary_pool_list do
+    local mercPoolList = find_uicomponent_from_table(core:get_ui_root(), mod.ui_settings.path_to_mercenary_pool_list[i])
+
+    if not mercPoolList then
+      out("[TTC]: Can't find mercenary pool list!")
       break
     end
-  end
-  if not unitList then 
-    out("No mercenary unit lists were found!")
-    out("Either the recruitment panel doesn't exist currently, there are no mercenaries available, or the script is missing a path!")
-  end
-  local count = unitList:ChildCount()
-  out("The mercenary unit list has: "..tostring(count).." options available")
-  for i = 0, count - 1 do
-    local ok = mod.add_listeners_to_recruitable_unit_card(UIComponent(unitList:Find(i)))
-    if ok then any_new_listeners = true end
+    
+    -- From the merc pool list, there will be multiple children, which each have their own list of units.
+    local mercPoolCount = mercPoolList:ChildCount()
+
+    for j = 0, mercPoolCount -1 do
+      local mercPool = UIComponent(mercPoolList:Find(j))
+      local unitList = find_uicomponent(mercPool, "listview", "list_clip", "list_box")
+
+      if not unitList or unitList:ChildCount() <= 0 then
+        out("[TTC]: Can't find recruitment unit list!")
+        break
+      end
+
+      local unitCount = unitList:ChildCount()
+
+      for k = 0, unitCount - 1 do
+        local ok = mod.add_listeners_to_recruitable_unit_card(UIComponent(unitList:Find(k)))
+        if ok then any_new_listeners = true end
+      end
+    end
   end
   
   if any_new_listeners then
@@ -2701,19 +2716,19 @@ mod.setup_exchange = function ()
   out("The exchange panel has opened!")
   core:remove_listener("TTCExchangeListeners")
   mod.refresh_icons_on_exchange_bars()
-  out("1")
+  -- out("1")
   core:trigger_event("ModScriptEventRefreshUnitCards")
   local currently_selected_cqi = cm:get_campaign_ui_manager():get_char_selected_cqi()
-  out("2")
+  -- out("2")
   local character_record_1 = mod.characters[currently_selected_cqi]
   local meters_special = mod.add_or_get_exchange_panel_meters("special")
-  out("3")
+  -- out("3")
   local meters_rare = mod.add_or_get_exchange_panel_meters("rare")
-  out("4")
+  -- out("4")
   mod.add_listeners_to_exchange_meter("special", meters_special[1], currently_selected_cqi)
-  out("5")
+  -- out("5")
   mod.add_listeners_to_exchange_meter("rare", meters_rare[1], currently_selected_cqi)
-  out("6")
+  -- out("6")
   local character_record_2 = mod.get_other_character_in_exchange()
   if not character_record_2 then
     out("Failed to get the other character in exchange, exchange setup failed!")
@@ -2806,7 +2821,7 @@ mod.setup_exchange = function ()
     end,
     true
   )
-  out("We did everything, I guess?")
+  -- out("We did everything, I guess?")
 end
 
 
