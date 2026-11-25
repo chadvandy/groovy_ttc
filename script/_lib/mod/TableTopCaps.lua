@@ -830,7 +830,7 @@ mod.refresh_icons_on_exchange_bars = function()
       out("Handling unit card "..tostring(i))
       local unitCard = UIComponent(armyList:Find(i))
       local turns = find_uicomponent(unitCard, "card_image_holder", "campaign", "Turns")
-      
+
       -- NOTE: Testing for the Turns component having a current state that starts with `queued`.
       if turns:Visible() and turns:CurrentState():find("^queued") then -- Queued Unit Card
         -- :root:hud_campaign:unit_information_parent:unit_info_panel_holder_parent:unit_info_panel_holder:unit_information
@@ -2948,7 +2948,7 @@ mod.display_costs_on_unit_browser = function()
     end,
     function(context)
         should_display = not should_display
-        core:svr_save_registry_bool("spell_browser_cap_toggle", not should_display)
+        core:svr_save_registry_bool("spell_browser_cap_toggle", should_display)
     end,
     true
   )
