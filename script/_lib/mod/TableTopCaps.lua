@@ -2916,8 +2916,8 @@ mod.display_costs_on_unit_browser = function()
 
   local category_list = find_uicomponent(ut_parent, "main_holder", "units_listview", "list_clip", "list_box")
 
+  local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
   if is_uicomponent(category_list) then
-    local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
     for i = 0, category_list:ChildCount() - 1 do
       local this_category = UIComponent(category_list:Find(i))
       -- :CcoGroupList7403738784:roster_list:CcoUnitsCustomBattlePermissionRecordwh3_main_ksl_inf_kossars_0:wh3_main_ksl_kislev:0
