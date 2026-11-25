@@ -830,7 +830,9 @@ mod.refresh_icons_on_exchange_bars = function()
       out("Handling unit card "..tostring(i))
       local unitCard = UIComponent(armyList:Find(i))
       local turns = find_uicomponent(unitCard, "card_image_holder", "campaign", "Turns")
-      if turns:Visible() then -- Queued Unit Card
+      
+      -- NOTE: Testing for the Turns component having a current state that starts with `queued`.
+      if turns:Visible() and turns:CurrentState():find("^queued") then -- Queued Unit Card
         -- :root:hud_campaign:unit_information_parent:unit_info_panel_holder_parent:unit_info_panel_holder:unit_information
         local ok, err = pcall(function()
           local experience_icon = find_uicomponent(unitCard, "experience")
@@ -2741,6 +2743,8 @@ mod.setup_exchange = function ()
     mod.adjust_exchange_panels()
   end, 0.1)
 
+  -- Handling for the evaluation of points between the two armies. Changes the calculated
+  -- points whenever a unit card is clicked.
   core:add_listener(
     "TTCExchangeListeners",
     "ComponentLClickUp",
