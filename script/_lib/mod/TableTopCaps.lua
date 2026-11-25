@@ -2917,6 +2917,19 @@ mod.display_costs_on_unit_browser = function()
   local category_list = find_uicomponent(ut_parent, "main_holder", "units_listview", "list_clip", "list_box")
 
   local should_display = not core:svr_load_registry_bool("spell_browser_cap_toggle")
+
+  -- Create the toggle button.
+  local race_holder = find_uicomponent(ut_parent, "race_holder")
+  if is_uicomponent(race_holder) then
+    local toggle_caps, was_created = core:get_or_create_component("spell_browser_cap_toggle", "ui/templates/square_button_toggle_40", race_holder)
+    if was_created and should_display then
+      toggle_caps:SetState("selected")
+    end
+    toggle_caps:SetDockingPoint(6)
+    toggle_caps:SetImagePath("ui/custom/recruitment_controls/fuckoffbutton.png")
+    toggle_caps:SetTooltipText(common.get_localised_string("ttc_show_costs"), true)
+  end
+
   if is_uicomponent(category_list) then
     for i = 0, category_list:ChildCount() - 1 do
       local this_category = UIComponent(category_list:Find(i))
@@ -2929,17 +2942,29 @@ mod.display_costs_on_unit_browser = function()
     end
   end
 
-  local race_holder = find_uicomponent(ut_parent, "race_holder")
-  if is_uicomponent(race_holder) then
-    local toggle_caps, was_created = core:get_or_create_component("spell_browser_cap_toggle", "ui/templates/square_button_toggle_40", race_holder)
-    if was_created and should_display then
-      toggle_caps:SetState("selected")
-    end
-    toggle_caps:SetDockingPoint(6)
-    toggle_caps:SetImagePath("ui/custom/recruitment_controls/fuckoffbutton.png")
-    toggle_caps:SetTooltipText(common.get_localised_string("ttc_show_costs"), true)
-  end
 
+  local function refresh_unit_pip_display() 
+    -- Redefine the UI components, as their memory addresses may have slipped.
+    local parent = find_uicomponent(core:get_ui_root(), "spell_browser", "panel_clip", "units_tab_parent")
+
+    if not parent then return end
+
+    local list = find_uicomponent(parent, "main_holder", "units_listview", "list_clip", "list_box")
+
+    for i = 0, list:ChildCount() -1 do
+      local category = UIComponent(list:Find(i))
+
+      local roster_list = find_uicomponent(category, "roster_list")
+      for j = 0, roster_list:ChildCount() -1 do
+        local unit = UIComponent(roster_list:Find(j))
+        local xp = find_uicomponent(unit, "experience")
+        xp:SetVisible(should_display)
+      end
+    end
+  end 
+
+
+  -- Whenever the button is clicked, switch the setting and set the icon on all the units.
   core:add_listener(
     "TTCUnitBrowser",
     "ComponentLClickUp",
@@ -2949,6 +2974,8 @@ mod.display_costs_on_unit_browser = function()
     function(context)
         should_display = not should_display
         core:svr_save_registry_bool("spell_browser_cap_toggle", should_display)
+
+        refresh_unit_pip_display()
     end,
     true
   )
@@ -2956,33 +2983,57 @@ end
 
 mod.unit_browser_listeners = function()
 
-  if __game_mode == __lib_type_campaign then
-    core:add_listener(
-      "TTCUnitBrowser",
-      "ComponentLClickUp",
-      function(context)
-        return mod.is_spell_browser_open() 
-      end,
-      function(context)
-        cm:callback(function() mod.display_costs_on_unit_browser() end, 0.1)
-      end,
-      true
-    )
-  else
-    local tm = core:get_tm()
-    core:add_listener(
-      "TTCUnitBrowser",
-      "ComponentLClickUp",
-      function(context)
-        return mod.is_spell_browser_open() 
-      end,
-      function(context)
-        tm:real_callback(function() mod.display_costs_on_unit_browser() end, 100)
-      end,
-      true
-    )
+  -- TODO This needs to be rewritten to have a single-time panel set up, and a smaller refresh function triggered
+  -- whenever the cap toggle button is pressed.
 
-  end
+  -- Whenever the "unit & spell browser" button is clicked, check to see if the panel is
+  -- opened entirely; once it is, set up our listeners.
+  core:add_listener(
+    "TTCUnitBrowser",
+    "ComponentLClickUp",
+    function(context)
+      return context.string == "button_spell_browser"
+    end,
+    function(context)
+      local tm = core:get_tm()
+      tm:real_callback(function() 
+        if mod.is_spell_browser_open() then
+          mod.display_costs_on_unit_browser()
+        else
+          out("[TTC] Can't find the spell browser! :(")
+        end
+      end, 100)
+    end,
+    true
+  )
+
+  -- if __game_mode == __lib_type_campaign then
+  --   core:add_listener(
+  --     "TTCUnitBrowser",
+  --     "ComponentLClickUp",
+  --     function(context)
+  --       return mod.is_spell_browser_open() 
+  --     end,
+  --     function(context)
+  --       cm:callback(function() mod.display_costs_on_unit_browser() end, 0.1)
+  --     end,
+  --     true
+  --   )
+  -- else
+  --   local tm = core:get_tm()
+  --   core:add_listener(
+  --     "TTCUnitBrowser",
+  --     "ComponentLClickUp",
+  --     function(context)
+  --       return mod.is_spell_browser_open() 
+  --     end,
+  --     function(context)
+  --       tm:real_callback(function() mod.display_costs_on_unit_browser() end, 100)
+  --     end,
+  --     true
+  --   )
+
+  -- end
   --[[
     This doesn't fire for this panel.
   core:add_listener(
