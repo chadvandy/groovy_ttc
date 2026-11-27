@@ -780,7 +780,8 @@ mod.add_listeners_to_army_unit_card = function(unitCard, character_record, unit_
           pipElement = UIComponent(element_to_clone:CopyComponent("ttc_pip"))
         end
       end
-      if not not pipElement then
+      
+      if is_uicomponent(pipElement) then
         pipElement:SetVisible(should_be_visible)
         local y_offset = 20
         local AllyIcon = find_uicomponent(unitCard, "card_image_holder", "campaign", "faction_icon")
@@ -832,7 +833,7 @@ mod.refresh_icons_on_exchange_bars = function()
       local turns = find_uicomponent(unitCard, "card_image_holder", "campaign", "Turns")
 
       -- NOTE: Testing for the Turns component having a current state that starts with `queued`.
-      if turns:Visible() and turns:CurrentState():find("^queued") then -- Queued Unit Card
+      if is_uicomponent(turns) and turns:Visible() and turns:CurrentState():find("^queued") then -- Queued Unit Card
         -- :root:hud_campaign:unit_information_parent:unit_info_panel_holder_parent:unit_info_panel_holder:unit_information
         local ok, err = pcall(function()
           local experience_icon = find_uicomponent(unitCard, "experience")
@@ -849,13 +850,18 @@ mod.refresh_icons_on_exchange_bars = function()
         end
       elseif unitCard:Id() ~= "UnitCard1" then --regular unit_card that is not the general character
         local unitContextId = unitCard:GetContextObjectId("CcoCampaignUnit")
-        local campaignUnitContext = cco("CcoCampaignUnit", unitContextId)
-        local unit_key = campaignUnitContext:Call("UnitRecordContext.Key")
-        if campaignUnitContext:Call("IsCharacter") then
-          --nothing  
+
+        if not is_string(unitContextId) then
+          out("[TTC]: Can't find unit card " .. i .. "'s campaign unit!")
         else
-          local unit_record = mod.get_unit(unit_key, character_record)
-          mod.add_listeners_to_army_unit_card(unitCard, character_record, unit_record)
+          local campaignUnitContext = cco("CcoCampaignUnit", unitContextId)
+          local unit_key = campaignUnitContext:Call("UnitRecordContext.Key")
+          if campaignUnitContext:Call("IsCharacter") then
+            --nothing  
+          else
+            local unit_record = mod.get_unit(unit_key, character_record)
+            mod.add_listeners_to_army_unit_card(unitCard, character_record, unit_record)
+          end
         end
       end
     end
@@ -969,6 +975,7 @@ mod.select_character = function(character, force)
     out("WARNING: called select character for ["..tostring(character:command_queue_index()).."] but acquiring the unit list failed!")
     return
   end
+
   local has_units_queued = false
   for i = 0, armyList:ChildCount() - 1 do	
     local unitCard = UIComponent(armyList:Find(i))
